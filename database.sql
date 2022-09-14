@@ -1,20 +1,19 @@
+
 CREATE TABLE IF NOT EXISTS POI (
+    id_num int(40) NOT NULL AUTO_INCREMENT,
     id VARCHAR(50) NOT NULL,
     name VARCHAR(50) NOT NULL,
     address VARCHAR(50) NOT NULL,
     lat float(20) NOT NULL,
     lng float(20) NOT NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id_num)
 );
 
-DROP TABLE IF EXISTS krousma;
 CREATE TABLE krousma (
   username varchar(30) NOT NULL,
   magazi varchar(40) DEFAULT NULL,
-  pote timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY(username)
-
-) ;
+  pote timestamp NULL DEFAULT CURRENT_TIMESTAMP
+);
 
 CREATE TABLE IF NOT EXISTS User
 (
@@ -26,13 +25,12 @@ CREATE TABLE IF NOT EXISTS User
     PRIMARY KEY(id_user)
 );
 
-DROP TABLE IF EXISTS placetovisit;
 CREATE TABLE placetovisit (
   username varchar(30) NOT NULL,
   magazi varchar(40) DEFAULT NULL,
   pote timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  id_poi varchar(40),
+  id_poi int(40) NOT NULL AUTO_INCREMENT,
   ektimhsh INT(40),
-  FOREIGN KEY(id_poi) REFERENCES POI(id)
+  FOREIGN KEY(id_poi) REFERENCES POI(id_num)
 ) ;
 
