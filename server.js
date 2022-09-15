@@ -287,37 +287,50 @@ app.post('/epafi',(request, response) => {
 
 
   
-    connection.query('SELECT pote,username FROM krousma WHERE username = ? ', [username], (error2, result2) =>{
-      connection.query('SELECT pote,magazi FROM placetovisit WHERE username = ? ', [username], (error1, result1) =>{
+    connection.query("SELECT pote,username FROM krousma WHERE username like '"+username+"' ", (error2, result2) =>{
+      connection.query("SELECT pote,magazi FROM placetovisit WHERE username like '"+username+"' ", (error1, result1) =>{
         if( result1.length >0 && result2.length>0) {
         //var magazi =result1[0].magazi;
         //var krousma_name = result2[0].username;
 
-      var apotelesma =result2[0].pote.toISOString().replace("T", " ").slice(0, 19)
-      console.log(apotelesma);
+        var arr=[];
+          var y;
+          for (var i in result1) {
+            y=result1[i].magazi;
+            arr.push(y)
+        }
+        var magazi =result1[0].magazi;
+        console.log(arr)
+
      
-      //KRATA TIS TELEUTAIES 7 MERES //
+      var apotelesma =result2[0].pote.toISOString().replace("T", " ").slice(0, 11)
+      console.log(apotelesma);
+      const apo =new Date(apotelesma);
       const myDate = new Date(apotelesma);
       const nextDayOfMonth = myDate.getDate()-7;
       myDate.setDate(nextDayOfMonth);
-      const newDate = myDate.toISOString().replace(/T/, ' ').replace(/\..+/, '');
-      console.log(newDate) 
-      
-      //
-       //UPOLOGISE +-2
-       var n=myDate.getTime();
-       var d2=result2[0].pote;
-       var diffInMillis = d2.getTime()-n;
-       var isLessThan2Hour = diffInMillis < 60 * 120 * 1000;
-       console.log(isLessThan2Hour)
+      const newDate = myDate.toISOString().replace(/T/, ' ').replace(/\..+/, '')
+      console.log(newDate)
+
+      //UPOLOGISE +-2
+      var n=myDate.getTime();
+      var d2=result2[0].pote;
+      var diffInMillis = n - d2.getTime()
+      var isLessThan2Hour = diffInMillis < 60 * 120 * 1000;
+      console.log(isLessThan2Hour)
+
+      const onedayletter = myDate.getDate()+9;
+      myDate.setDate(onedayletter);
+      const x= myDate.toISOString().replace(/T/, ' ').replace(/\..+/, '').slice(0,11);
+console.log(x)
+
+
       if(isLessThan2Hour)
       {
-      var mquery = "select t1.username,t2.pote,t2.magazi from ( (select * from krousma where pote BETWEEN ? AND  ? ) as t1 inner join (select * from placetovisit where (pote BETWEEN ? AND  ? AND NOT username LIKE '"+username+"')) as t2 on t2.username = t1.username );";
      //SWSTA QUERY
-      var myquery ="select krousma.username,krousma.pote,placetovisit.username,placetovisit.pote,placetovisit.magazi from krousma INNER Join placetovisit where krousma.pote BETWEEN ? AND ? AND placetovisit.pote BETWEEN ? AND ? AND placetovisit.username not like '"+username+"' and krousma.username=placetovisit.username;";
-      var mquery2 = "select pote,magazi from visit where username like '"+username+"' and pote BETWEEN ? AND ? ;";
+      var myquery ="select krousma.pote,placetovisit.username,placetovisit.pote,placetovisit.magazi from placetovisit INNER Join krousma where  krousma.pote BETWEEN ? AND ? AND placetovisit.pote BETWEEN ? AND ? AND placetovisit.username not like \'"+username+"\'  and placetovisit.magazi in (?);";
 
-        connection.query(myquery,[newDate,apotelesma,newDate,apotelesma],(error, result) => {  
+        connection.query(myquery,[newDate,x,newDate,x,arr],(error, result) => {  
           if (error) {
             console.log(error);
         }                                      
@@ -356,6 +369,7 @@ app.post('/epafi',(request, response) => {
         var magazi =result5[0].magazi;
         console.log(arr)
 
+        
 
     
     
@@ -365,7 +379,7 @@ app.post('/epafi',(request, response) => {
       const myDate = new Date(apotelesma);
       const nextDayOfMonth = myDate.getDate()-7;
       myDate.setDate(nextDayOfMonth);
-      const newDate = myDate.toISOString().replace(/T/, ' ').replace(/\..+/, '').slice(0,11);
+      const newDate = myDate.toISOString().replace(/T/, ' ').replace(/\..+/, '')
       console.log(newDate)
 
       //UPOLOGISE +-2
