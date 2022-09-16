@@ -18,7 +18,7 @@ fs.readFile("../../specific_3.json", "utf8", (err,data) => {
   con.connect(function(err) {
     if (err) throw err;
     for(let i = 0; i<data1.length; i++){
-    con.query('INSERT INTO POI (id,name,address,lat,lng) VALUES (?,?,?,?,?)', [data1[i].id,data1[i].name,data1[i].address,data1[i].coordinates.lat,data1[i].coordinates.lng], function (err, result) {
+    con.query('INSERT INTO POI (type,id,name,address,lat,lng) VALUES (?,?,?,?,?,?)', [data1[i].types[0],data1[i].id,data1[i].name,data1[i].address,data1[i].coordinates.lat,data1[i].coordinates.lng], function (err, result) {
       if (err) throw err;
     });
     }
