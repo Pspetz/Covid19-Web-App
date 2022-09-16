@@ -289,10 +289,11 @@ app.post('/epafi',(request, response) => {
   
     connection.query("SELECT pote,username FROM krousma WHERE username like '"+username+"' ", (error2, result2) =>{
       connection.query("SELECT pote,magazi FROM placetovisit WHERE username like '"+username+"' ", (error1, result1) =>{
+      
+//EAN EINAI KROUSMA KAI EXEI PAEI SE MAGAZIA
         if( result1.length >0 && result2.length>0) {
         //var magazi =result1[0].magazi;
         //var krousma_name = result2[0].username;
-
         var arr=[];
           var y;
           for (var i in result1) {
@@ -328,7 +329,7 @@ console.log(x)
       if(isLessThan2Hour)
       {
      //SWSTA QUERY
-      var myquery ="select krousma.pote,placetovisit.username,placetovisit.pote,placetovisit.magazi from placetovisit INNER Join krousma where  krousma.pote BETWEEN ? AND ? AND placetovisit.pote BETWEEN ? AND ? AND placetovisit.username not like \'"+username+"\'  and placetovisit.magazi in (?);";
+      var myquery ="select krousma.username, krousma.pote,placetovisit.username,placetovisit.pote,placetovisit.magazi from placetovisit INNER Join krousma where  krousma.pote BETWEEN ? AND ? AND placetovisit.pote BETWEEN ? AND ? AND placetovisit.username not like \'"+username+"\' and krousma.username=placetovisit.username and placetovisit.magazi in (?);";
 
         connection.query(myquery,[newDate,x,newDate,x,arr],(error, result) => {  
           if (error) {
@@ -341,7 +342,7 @@ console.log(x)
         
             }
                 else{
-                  response.json({"status":"den uparxei epafi me krousma entos 2 wrwn"})
+                  response.json({"status":"den uparxei epafi me krousma "})
                 }
         
             //res.write(JSON.stringify(mmsg));
@@ -351,10 +352,10 @@ console.log(x)
 });
       }
       else{
-        response.json({"status":"den uparxei epafi me krousma"})
+        response.json({"status":"den uparxei epafi me krousma entos 2 wrwn"})
       }
-
-    } else if(result1.length >0 ){
+//O XRISTIS DEN EINAI KROUSMA ALLA EXEI PAEI SE MAGAZI
+    } else if(result1.length >0){
       var mquery2 = "select pote,magazi from krousma where username not like '"+username+"' ;";
       var mquery3 = "select pote,magazi from placetovisit where username  like '"+username+"' ;";
 
@@ -398,7 +399,7 @@ console.log(x)
       //SWSTA QUERY
       if(isLessThan2Hour)
       {
-       var truequery ="select placetovisit.username,placetovisit.magazi,placetovisit.pote,krousma.username,krousma.pote from placetovisit INNER join krousma WHERE krousma.pote BETWEEN ? AND ? AND placetovisit.pote BETWEEN ? AND ? AND placetovisit.username not like \'"+username+"\' and krousma.username =placetovisit.username and placetovisit.magazi IN (?);";
+       var truequery ="select placetovisit.username,placetovisit.magazi,placetovisit.pote,krousma.username,krousma.pote from placetovisit INNER join krousma WHERE krousma.pote BETWEEN ? AND ? AND placetovisit.pote BETWEEN ? AND ? AND placetovisit.username not like \'"+username+"\' and placetovisit.magazi IN (?);";
 
       //var truequery ="select placetovisit.username,placetovisit.magazi,placetovisit.pote,krousma.username,krousma.pote from placetovisit INNER join krousma WHERE krousma.pote BETWEEN ? AND ? AND placetovisit.pote BETWEEN ? AND ? AND placetovisit.username not like \'%"+username+"%\'  and krousma.username =placetovisit.username; ";
                      //select placetovisit.username,placetovisit.magazi,placetovisit.pote,krousma.username,krousma.pote from placetovisit INNER join krousma where krousma.pote BETWEEN '2022-09-06' AND '2022-09-14' AND  placetovisit.username not like '%kostas123' and krousma.username=placetovisit.username;
@@ -418,14 +419,19 @@ console.log(x)
         
             }
                 else{
-                  response.json({"status":"den uparxei epafi me krousma entos 2 wrwn"})
+                  response.json({"status":"den uparxei epafi me krousma "})
                 }
+                
         
 
 
       
     });
   } //if
+  else{
+    response.json({"status":"den uparxei epafi me krousma entws 2 wrwn"})
+
+  }
 });
   });
       
@@ -436,8 +442,6 @@ console.log(x)
 });
     });
 });
-
-
 
 
 
@@ -456,6 +460,28 @@ app.all('/deletestatistika',(request,response) =>{
 });
 
 
+
+// ADMIN STATISTIKA
+app.all('/statistikaadmin',(request,response) =>{
+
+      const myDate = new Date();
+      const myDate1 = new Date();
+      today=myDate.toISOString().replace("T", " ").slice(0, 11)
+      const sevendaysago = myDate.getDate()-7;
+      const fdaysletter = myDate1.getDate()+14; 
+      myDate.setDate(sevendaysago);
+      myDate1.setDate(fdaysletter);
+      const newDate = myDate.toISOString().replace(/T/, ' ').replace(/\..+/, '').slice(0,11)
+      const newDate1 = myDate1.toISOString().replace(/T/, ' ').replace(/\..+/, '').slice(0,11)
+      console.log(today)
+      console.log(newDate)
+      console.log(newDate1) 
+
+  connection.query('Select count(username) as count from placetovisit; select count(username) as count1 from krousma; select count(username) as count2 from krousma where pote between ? AND ?; select POI.type as magazi,sum(DISTINCT ektimhsh) as count4 from POI inner join placetovisit where POI.name=placetovisit.magazi group by type;',[newDate,newDate1],(error, result) => {  
+    response.json(result)
+    
+});
+});
 
 
 //STATISTIKA MAGAZIWN:

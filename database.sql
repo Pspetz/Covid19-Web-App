@@ -1,6 +1,7 @@
 
 CREATE TABLE IF NOT EXISTS POI (
     id_num int(40) NOT NULL AUTO_INCREMENT,
+    type varchar(80) NOT NULL,
     id VARCHAR(50) NOT NULL,
     name VARCHAR(50) NOT NULL,
     address VARCHAR(50) NOT NULL,
