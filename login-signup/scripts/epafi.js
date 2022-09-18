@@ -25,9 +25,6 @@ async function epafi() {
        }
     }else{
         alert(db_data.status)
-        for(i in db_data){
-            $("<tr><td>" + i +"</td><td>" +  db_data[i].username+  "</td><td>"+ db_data[i].magazi + "</td><td>"+ new Date(db_data[i].pote).toISOString().replace("T", " ").slice(0, 19)+ "</td></tr>").appendTo("#myepafi");
-           }
     }
     
 }

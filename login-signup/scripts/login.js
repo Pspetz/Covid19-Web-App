@@ -9,9 +9,9 @@ function login_auth(){
     //fetch url -> path pros ton poro xrisimopoihshs: to  backend/login.js
         fetch('/AUTH', 
             {
-                method: 'POST', //tha kanw post sto AUTH (stin pleura tou client panta ta fetch)
+                method: 'POST', //tha kanw post sto AUTH 
                 headers: {
-                            'Content-Type': 'application/json' //edw apla leme ton tupo ton dedomenwn pou tha steiloume
+                            'Content-Type': 'application/json' 
                         },
                 body: JSON.stringify(fields) //body packaging ola ta dedomena pou thelw(dld thelw auta ta dedomena na ta steilw ws Json se morfi string)
             })
