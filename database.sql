@@ -10,11 +10,7 @@ CREATE TABLE IF NOT EXISTS POI (
     PRIMARY KEY(id_num)
 );
 
-CREATE TABLE krousma (
-  username varchar(30) NOT NULL,
-  magazi varchar(40) DEFAULT NULL,
-  pote timestamp NULL DEFAULT CURRENT_TIMESTAMP
-);
+
 
 CREATE TABLE IF NOT EXISTS User
 (
@@ -35,3 +31,8 @@ CREATE TABLE placetovisit (
   FOREIGN KEY(id_poi) REFERENCES POI(id_num)
 ) ;
 
+CREATE TABLE krousma (
+  username varchar(30) NOT NULL,
+  magazi varchar(40) DEFAULT NULL,
+  pote timestamp NULL DEFAULT CURRENT_TIMESTAMP
+);
