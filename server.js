@@ -370,22 +370,33 @@ console.log(x)
         var magazi =result5[0].magazi;
         console.log(arr)
 
-        
+        var arr1=[];
+        var y1;
+        for (var i in result4) {
+          y1=result4[i].pote.toISOString().replace("T", " ").slice(0, 11)
+          arr1.push(y1)
+          arr1.reverse();
+
+      }
+      var val =(arr1.length -1);
+
+       var nedate=arr1[val];
+
+
 
     
-    
-      var apotelesma =result4[0].pote.toISOString().replace("T", " ").slice(0, 11)
+      var apotelesma =nedate.replace("T", " ").slice(0, 11)
       console.log(apotelesma);
       const apo =new Date(apotelesma);
       const myDate = new Date(apotelesma);
       const nextDayOfMonth = myDate.getDate()-7;
       myDate.setDate(nextDayOfMonth);
-      const newDate = myDate.toISOString().replace(/T/, ' ').replace(/\..+/, '')
-      console.log(newDate)
+      const newDate = myDate.toISOString().replace(/T/, ' ').replace(/\..+/, '').slice
+      //console.log(newDate)
 
       //UPOLOGISE +-2
       var n=myDate.getTime();
-      var d2=result4[0].pote;
+      var d2=result4[val].pote;
       var diffInMillis = n - d2.getTime()
       var isLessThan2Hour = diffInMillis < 60 * 120 * 1000;
       console.log(isLessThan2Hour)
@@ -394,6 +405,7 @@ console.log(x)
       myDate.setDate(onedayletter);
       const x= myDate.toISOString().replace(/T/, ' ').replace(/\..+/, '').slice(0,11);
 console.log(x)
+console.log(newDate)
 
     
       //SWSTA QUERY
@@ -401,8 +413,6 @@ console.log(x)
       {
        var truequery ="select placetovisit.username,placetovisit.magazi,placetovisit.pote,krousma.username,krousma.pote from placetovisit INNER join krousma WHERE krousma.pote BETWEEN ? AND ? AND placetovisit.pote BETWEEN ? AND ? AND placetovisit.username not like \'"+username+"\' and placetovisit.magazi IN (?);";
 
-      //var truequery ="select placetovisit.username,placetovisit.magazi,placetovisit.pote,krousma.username,krousma.pote from placetovisit INNER join krousma WHERE krousma.pote BETWEEN ? AND ? AND placetovisit.pote BETWEEN ? AND ? AND placetovisit.username not like \'%"+username+"%\'  and krousma.username =placetovisit.username; ";
-                     //select placetovisit.username,placetovisit.magazi,placetovisit.pote,krousma.username,krousma.pote from placetovisit INNER join krousma where krousma.pote BETWEEN '2022-09-06' AND '2022-09-14' AND  placetovisit.username not like '%kostas123' and krousma.username=placetovisit.username;
 
         const values = [newDate, apotelesma];  
 
@@ -451,7 +461,7 @@ console.log(x)
 // ADMIN // 
 
 
-//ISTORIKO USER EKTIMISI
+//ADMIN DELETE 
 app.all('/deletestatistika',(request,response) =>{
   connection.query('DELETE  from POI ');
 
@@ -478,15 +488,41 @@ app.all('/statistikaadmin',(request,response) =>{
       console.log(newDate1) 
 
   connection.query('Select count(username) as count from placetovisit; select count(username) as count1 from krousma; select count(username) as count2 from krousma where pote between ? AND ?; select POI.type as magazi,sum(DISTINCT ektimhsh) as count4 from POI inner join placetovisit where POI.name=placetovisit.magazi group by type;',[newDate,newDate1],(error, result) => {  
+  
     response.json(result)
     
 });
 });
 
 
-//STATISTIKA MAGAZIWN:
-// select magazi,SUM(ektimhsh) from placetovisit GROUP BY magazi;
+app.all('/upload',(request,response) =>{
 
+var data=request.body;
+console.log(data)
+
+});
+
+
+
+app.post('/giveadmin',(request,response) =>{
+      var username = request.body['username'];
+      console.log(username)
+
+      connection.query(`update User set isAdmin=1 where username=? `, [username],function(err,result,fields){
+          if (err){
+              response.json({"status":"error"})
+          }
+          else{
+              if(result.affectedRows === 0) {
+                  response.send({"status":"User does not exist"}) 
+              }
+
+              else{
+                  response.send({"status":"User is now Admin"})
+          }
+        }
+      });
+  });
 
 
 
