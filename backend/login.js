@@ -1,8 +1,6 @@
 var CryptoJS = require('crypto-js');
 var path = require('path');
 
-//request:xreiazete gia na steilw pisw ston xristi minimata
-//response periexei ola ta data 
 module.exports.login =  function login(app,connection,path) {
  app.get('/', function (request, response) {
         response.sendFile(path.join(__dirname, '../login-signup', 'AUTO.html'));
