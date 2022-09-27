@@ -4,6 +4,7 @@ var mysql = require('mysql');
 var bodyParser = require('body-parser'); //all http requests ta opoia eksagonte sto body.request
 var login= require('./backend/login.js');
 var signup =require('./backend/signup.js');
+var uploadfile =require('./backend/uploadfile.js');
 var changeSettings = require('./backend/usersettings.js');
 const e = require('express');
 const app = express();
@@ -463,7 +464,7 @@ console.log(newDate)
 
 //ADMIN DELETE 
 app.all('/deletestatistika',(request,response) =>{
-  connection.query('DELETE  from POI ');
+  connection.query('DELETE FROM placetovisit; DELETE  from POI; DELETE from krousma;');
 
     response.json({"status":"epituxis diagrafi dedwmenwn"});
     
@@ -495,12 +496,6 @@ app.all('/statistikaadmin',(request,response) =>{
 });
 
 
-app.all('/upload',(request,response) =>{
-
-var data=request.body;
-console.log(data)
-
-});
 
 
 
@@ -532,6 +527,8 @@ login.login(app,connection,path);
 signup.signup(app,connection);
 
 changeSettings.changeSettings(app,connection);
+
+uploadfile.uploadfile(app,connection)
 
 //user_settings.user_settings(app, express, connection);
 // geoloc.geoloc()
